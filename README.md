@@ -79,9 +79,14 @@ sudo ./mt7925-bt-fix.sh uninstall
 
 **Reference specs:**
 
-- AMD Ryzen AI processor (Strix Point)
-- MediaTek MT7925 802.11be WiFi 7 PCIe adapter
-- Internal USB Bluetooth (0489:e111 Foxconn)
+- CPU: AMD Ryzen AI 7 350 (16 cores) @ 5.09 GHz
+- GPU: AMD Radeon 860M Graphics (RDNA 3.5)
+- NPU: AMD XDNA AI Accelerator
+- WiFi: MT7925 802.11be WiFi 7 PCIe adapter
+- Bluetooth: Internal USB (0489:e111 Foxconn)
+- Memory: 32 GB
+- Sound: ALC287 codec (Lenovo Yoga firmware)
+- Desktop: GNOME 50.1 on Wayland
 - BIOS: C7CN39WW+
 
 _Submit a PR to add your system!_
