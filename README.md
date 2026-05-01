@@ -72,6 +72,31 @@ sudo ./mt7925-bt-fix.sh uninstall
 2. Adds a suspend/resume hook to fix Bluetooth after waking from sleep
 3. Provides helpful status checking and troubleshooting
 
+## What Gets Installed
+
+Running `install` creates these files:
+
+| File                                          | Purpose              | Persists              |
+| --------------------------------------------- | -------------------- | --------------------- |
+| `/etc/systemd/system/mt7925-bt-heal.service`  | systemd service      | ✅ Runs on every boot |
+| `/usr/bin/mt7925-bt-fix-reload.sh`            | Module reload script | ✅ Called by service  |
+| `/usr/lib/systemd/system-sleep/mt7925-bt-fix` | Suspend/resume hook  | ✅ Runs after wake    |
+| `/var/log/mt7925-bt-fix.log`                  | Activity log         | ℹ️ Can be deleted     |
+
+## Uninstallation
+
+To completely remove the fix:
+
+```bash
+sudo ./mt7925-bt-fix.sh uninstall
+```
+
+This will:
+
+- Stop and disable the systemd service
+- Remove all installed files (service, scripts, hooks)
+- Remove the log file
+
 ## Tested Systems
 
 | Device                | Chip                 | WiFi Module        | Distro               | Kernel          | Status   |
