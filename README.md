@@ -43,6 +43,7 @@ curl -sSL https://raw.githubusercontent.com/rorar/mt7925-bt-fix/main/install.sh 
 # Or clone and run manually
 git clone https://github.com/rorar/mt7925-bt-fix.git
 cd mt7925-bt-fix
+chmod +x mt7925-bt-fix.sh
 sudo ./mt7925-bt-fix.sh install
 ```
 
