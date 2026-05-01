@@ -1,0 +1,5 @@
+# Logs
+*.log
+
+# System files that may be created during testing
+test_out.txt
