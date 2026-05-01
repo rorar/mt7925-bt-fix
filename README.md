@@ -73,9 +73,16 @@ sudo ./mt7925-bt-fix.sh uninstall
 
 ## Tested Systems
 
-| Device                | CPU       | Distro               | Status   |
-| --------------------- | --------- | -------------------- | -------- |
-| Lenovo Yoga 7 14AKP10 | AMD Ryzen | Arch Linux (CachyOS) | ✅ Works |
+| Device                | Chip                 | WiFi Module        | Distro               | Kernel          | Status   |
+| --------------------- | -------------------- | ------------------ | -------------------- | --------------- | -------- |
+| Lenovo Yoga 7 14AKP10 | MT7925 (Filogic 360) | PCIe WiFi + USB BT | Arch Linux (CachyOS) | 7.0.2-2-cachyos | ✅ Works |
+
+**Reference specs:**
+
+- AMD Ryzen AI processor (Strix Point)
+- MediaTek MT7925 802.11be WiFi 7 PCIe adapter
+- Internal USB Bluetooth (0489:e111 Foxconn)
+- BIOS: C7CN39WW+
 
 _Submit a PR to add your system!_
 
