@@ -8,6 +8,11 @@ A community-maintained script to fix MediaTek MT7925 Bluetooth not initializing 
 
 The MediaTek MT7925 (Filogic 360) is a Wi-Fi 7 + Bluetooth 5.3 PCIe combo chip found in many modern laptops. On Linux, the Bluetooth portion often fails to initialize on boot, leaving you with no Bluetooth adapter.
 
+The relevant kernel modules are:
+
+- **WiFi:** `mt7925e`
+- **Bluetooth:** `btmtk`, `btusb`
+
 **Symptoms:**
 
 - `bluetoothctl power on` returns "No default controller available"
