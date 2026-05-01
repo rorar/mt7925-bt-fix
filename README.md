@@ -83,7 +83,8 @@ sudo ./mt7925-bt-fix.sh uninstall
 - GPU: AMD Radeon 860M Graphics (RDNA 3.5)
 - NPU: AMD XDNA AI Accelerator
 - WiFi: MT7925 802.11be WiFi 7 PCIe adapter
-- Bluetooth: Internal USB (0489:e111 Foxconn)
+- Bluetooth: Internal USB (0489:e111 Foxconn / Hon Hai Wireless_Device)
+  `lsusb: Bus 003 Device 002: ID 0489:e111`
 - Memory: 32 GB
 - Sound: ALC287 codec (Lenovo Yoga firmware)
 - Desktop: GNOME 50.1 on Wayland
