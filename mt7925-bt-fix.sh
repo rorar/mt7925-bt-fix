@@ -230,8 +230,9 @@ EOF
 	}
 	success "Created ${SERVICE_FILE}"
 
-	# Create suspend/resume hook (use <<EOF to expand variables)
-	cat >"$SLEEP_HOOK" <<EOF || {
+	# Create suspend/resume hook (quoted <<'EOF': the hook needs its own
+	# variables intact at runtime, nothing here is expanded at install time)
+	cat >"$SLEEP_HOOK" <<'EOF' || {
 #!/bin/bash
 # Fix MT7925 BT after suspend/resume
 
