@@ -21,7 +21,32 @@ The relevant kernel modules are:
 
 ## Quick Start
 
-### Step 1: Try This First (No Install Needed!) ⚡
+### Step 1: Confirm You Actually Have an MT7925 ⚠️
+
+**Your laptop's model name does not tell you which wireless chip is inside.** Vendors ship the same model with different modules depending on batch and region — the Lenovo Yoga 7 14AKP10 in the table below exists with both MediaTek and Realtek wireless. Check the hardware, not the model number:
+
+```bash
+lspci -nn | grep -i network
+```
+
+You are looking for `MediaTek` and `MT7925`, PCI ID `14c3:7925`. If you see a different vendor, this script will not help you and the installer will refuse to run:
+
+| What you see                   | Driver        | This script applies |
+| ------------------------------ | ------------- | ------------------- |
+| `MediaTek ... MT7925 [14c3:7925]` | `mt7925e`  | ✅ Yes              |
+| `Realtek ... RTL89xx [10ec:*]`    | `rtw89_*`  | ❌ No               |
+| `Intel ... Wi-Fi [8086:*]`        | `iwlwifi`  | ❌ No               |
+| `Qualcomm ... [17cb:*]`           | `ath1*`    | ❌ No               |
+
+It is also worth checking which driver actually serves your Bluetooth, since the combo chip's BT side is what this fixes:
+
+```bash
+journalctl -b -k | grep -i "bluetooth: hci0"
+```
+
+`btmtk` in that output means MediaTek. If you instead see `RTL:` (Realtek) or `btintel` (Intel), you have a different chip and a different problem.
+
+### Step 2: Try This First (No Install Needed!) ⚡
 
 Before installing anything, try the **power cycle fix** — it may solve your problem without needing the script:
 
@@ -39,7 +64,7 @@ This resets the internal USB BT controller's GPIO state, which can get stuck aft
 - ✅ **Yes** → You're done! No script needed. 🎉
 - ❌ **No** → Continue with installation below.
 
-### Step 2: Install the Fix (If Power Cycle Didn't Work)
+### Step 3: Install the Fix (If Power Cycle Didn't Work)
 
 ```bash
 # Download and run
@@ -104,29 +129,38 @@ This will:
 
 ## Tested Systems
 
-| Device                | Chip                 | WiFi Module        | Distro               | Kernel          | Status   |
-| --------------------- | -------------------- | ------------------ | -------------------- | --------------- | -------- |
-| Lenovo Yoga 7 14AKP10 | MT7925 (Filogic 360) | PCIe WiFi + USB BT | Arch Linux (CachyOS) | 7.0.2-2-cachyos | ✅ Works |
+> **Read this table by the PCI ID, not by the device name.** A row here means
+> "this chip was fixed on that machine", not "every unit of this model has this
+> chip". The same model name is shipped with different wireless modules, so a
+> matching device name is not a reason to skip Step 1.
 
-**Reference specs:**
+| Device                | PCI ID      | Chip                 | Distro               | Kernel          | Status   |
+| --------------------- | ----------- | -------------------- | -------------------- | --------------- | -------- |
+| Lenovo Yoga 7 14AKP10 | `14c3:7925` | MT7925 (Filogic 360) | Arch Linux (CachyOS) | 7.0.2-2-cachyos | ✅ Works |
+
+**The specific unit that row was tested on:**
 
 - CPU: AMD Ryzen AI 7 350 (16 cores) @ 5.09 GHz
 - GPU: AMD Radeon 860M Graphics (RDNA 3.5)
-- NPU: AMD XDNA AI Accelerator
-- WiFi: MT7925 802.11be WiFi 7 PCIe adapter
-- Bluetooth: Internal USB (0489:e111 Foxconn / Hon Hai Wireless_Device)
-  `lsusb: Bus 003 Device 002: ID 0489:e111`
+- WiFi: MT7925 802.11be PCIe adapter (`14c3:7925`)
+- Bluetooth: internal USB, Foxconn / Hon Hai (`0489:e111`)
 - Memory: 32 GB
-- Sound: ALC287 codec (Lenovo Yoga firmware)
 - Desktop: GNOME 50.1 on Wayland
-- BIOS: C7CN39WW+
 
-_Submit a PR to add your system!_
+Another Yoga 7 14AKP10 in the author's hands ships a Realtek RTL8922AE
+(`10ec:8922`) with a Realtek BT radio (`0bda:d922`) instead. On that unit the
+Bluetooth comes up on its own through `btrtl`, and this fix is not merely
+unnecessary — its boot service unloads the working driver and loads `mt7925e`
+for hardware that isn't there. Same model name, different silicon. Hence Step 1.
+
+_Submit a PR to add your system — please include the PCI ID from
+`lspci -nn | grep -i network`, that is the part that actually identifies the chip._
 
 ## Requirements
 
 - Linux with systemd
-- MediaTek MT7925 wireless card (check with `lspci | grep MT7925`)
+- MediaTek MT7925 wireless card — verify with `lspci -nn | grep -i network` and
+  look for `14c3:7925` (see Step 1 under Quick Start)
 - Root access (sudo)
 
 ## Troubleshooting
@@ -134,9 +168,11 @@ _Submit a PR to add your system!_
 ### Bluetooth still not working after install?
 
 1. **Reboot** — the service runs on boot, not during install
-2. Try the power cycle procedure again (step 1 above)
+2. Try the power cycle procedure again (step 2 above)
 3. Check BIOS settings — some laptops have separate WiFi/BT enable
-4. Check for kernel updates
+4. Check for kernel updates — if a newer kernel or `linux-firmware` fixed the
+   initialization upstream, this workaround is obsolete and should be removed
+   with `uninstall`
 
 ### WiFi stopped working!
 
